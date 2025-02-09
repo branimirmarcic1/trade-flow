@@ -9,5 +9,5 @@ public class ExchangeRateDto
 {
     public string Symbol { get; set; } = default!;
     public decimal Price { get; set; }
-    public DateTime LastUpdated { get; set; }
+    public DateTimeOffset LastUpdated { get; set; }
 }
