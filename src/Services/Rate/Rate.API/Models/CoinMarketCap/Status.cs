@@ -11,7 +11,7 @@ public class Status
     public int ErrorCode { get; set; }
 
     [JsonPropertyName("error_message")]
-    public object ErrorMessage { get; set; }
+    public object ErrorMessage { get; set; } = default!;
 
     [JsonPropertyName("elapsed")]
     public int Elapsed { get; set; }
@@ -20,7 +20,7 @@ public class Status
     public int CreditCount { get; set; }
 
     [JsonPropertyName("notice")]
-    public object Notice { get; set; }
+    public object Notice { get; set; } = default!;
 
     [JsonPropertyName("total_count")]
     public int TotalCount { get; set; }

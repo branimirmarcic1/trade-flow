@@ -8,14 +8,14 @@ public class Platform
     public int Id { get; set; }
 
     [JsonPropertyName("name")]
-    public string Name { get; set; }
+    public string Name { get; set; } = default!;
 
     [JsonPropertyName("symbol")]
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = default!;
 
     [JsonPropertyName("slug")]
-    public string Slug { get; set; }
+    public string Slug { get; set; } = default!;
 
     [JsonPropertyName("token_address")]
-    public string TokenAddress { get; set; }
+    public string TokenAddress { get; set; } = default!;
 }

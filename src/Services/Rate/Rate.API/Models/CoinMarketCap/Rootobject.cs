@@ -5,8 +5,8 @@ namespace Rate.API.Models.CoinMarketCap;
 public class Rootobject
 {
     [JsonPropertyName("status")]
-    public Status Status { get; set; }
+    public Status Status { get; set; } = default!;
 
     [JsonPropertyName("data")]
-    public Datum[] Data { get; set; }
+    public Datum[] Data { get; set; } = default!;
 }

@@ -8,13 +8,13 @@ public class Datum
     public int Id { get; set; }
 
     [JsonPropertyName("name")]
-    public string Name { get; set; }
+    public string Name { get; set; } = default!;
 
     [JsonPropertyName("symbol")]
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = default!;
 
     [JsonPropertyName("slug")]
-    public string Slug { get; set; }
+    public string Slug { get; set; } = default!;
 
     [JsonPropertyName("num_market_pairs")]
     public int NumMarketPairs { get; set; }
@@ -23,7 +23,7 @@ public class Datum
     public DateTime DateAdded { get; set; }
 
     [JsonPropertyName("tags")]
-    public string[] Tags { get; set; }
+    public string[] Tags { get; set; } = default!;
 
     [JsonPropertyName("max_supply")]
     public float? MaxSupply { get; set; }
@@ -38,7 +38,7 @@ public class Datum
     public bool InfiniteSupply { get; set; }
 
     [JsonPropertyName("platform")]
-    public Platform Platform { get; set; }
+    public Platform Platform { get; set; } = default!;
 
     [JsonPropertyName("cmc_rank")]
     public int CmcRank { get; set; }
@@ -56,5 +56,5 @@ public class Datum
     public DateTime LastUpdated { get; set; }
 
     [JsonPropertyName("quote")]
-    public Quote Quote { get; set; }
+    public Quote Quote { get; set; } = default!;
 }
