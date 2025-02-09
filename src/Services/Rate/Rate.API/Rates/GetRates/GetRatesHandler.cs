@@ -14,6 +14,9 @@ internal class GetRatesQueryHandler
 
     public async Task<GetRatesResult> Handle(GetRatesQuery query, CancellationToken cancellationToken)
     {
+        //IReadOnlyList<ExchangeRate> rates = await session.Query<ExchangeRate>()
+        //    .Where(r => r.LastUpdated >= DateTimeOffset.UtcNow.AddHours(-24))
+        //    .ToListAsync(cancellationToken);
         IReadOnlyList<ExchangeRate> rates = GenerateTestExchangeRates();
 
         List<ExchangeRateDto> exchangeRates = rates.Adapt<List<ExchangeRateDto>>();
