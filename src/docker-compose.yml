@@ -2,6 +2,8 @@ services:
   ratedb:
     image: postgres
 
+  positiondb:
+    image: mcr.microsoft.com/mssql/server
   # rate.api:
   #   image: ${DOCKER_REGISTRY-}rateapi
   #   build:

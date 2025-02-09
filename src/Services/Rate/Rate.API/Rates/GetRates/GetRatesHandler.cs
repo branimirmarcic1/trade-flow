@@ -21,7 +21,7 @@ internal class GetRatesQueryHandler
 
         List<ExchangeRateDto> exchangeRates = rates.Adapt<List<ExchangeRateDto>>();
 
-        HashSet<string> symbols = new HashSet<string>(rates.Select(r => r.Symbol));
+        HashSet<string> symbols = new(rates.Select(r => r.Symbol));
         List<RateVariationAlert> rateVariations = [];
 
         foreach (string symbol in symbols)
@@ -47,10 +47,10 @@ internal class GetRatesQueryHandler
 
         return new GetRatesResult(exchangeRates, rateVariations);
     }
-    private List<ExchangeRate> GenerateTestExchangeRates()
+    private static List<ExchangeRate> GenerateTestExchangeRates()
     {
         List<ExchangeRate> exchangeRates = [];
-        Random random = new Random();
+        Random random = new();
         DateTimeOffset oldestRateTime = DateTimeOffset.UtcNow.AddMinutes(2);
         DateTimeOffset latestRateTime = DateTimeOffset.UtcNow;
         List<string> symbols = ["MNT", "ICP", "ETC", "TAO", "KAS"];

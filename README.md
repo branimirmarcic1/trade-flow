@@ -21,7 +21,7 @@ This system implements an **event-driven architecture** using **.NET 8, RabbitMQ
 
 ### **Communication**
 - RabbitMQ + MassTransit for event-driven messaging.  
-- Docker for deployment (testing on Raspberry Pi is also possible).  
+- Docker for deployment.
 
 ---
 
