@@ -10,35 +10,32 @@ internal class GetRatesQueryHandler
     (IDocumentSession session)
     : IQueryHandler<GetRatesQuery, GetRatesResult>
 {
+    private const decimal VARIATION_THRESHOLD_PERCENT = 5;
+
     public async Task<GetRatesResult> Handle(GetRatesQuery query, CancellationToken cancellationToken)
     {
-        //IReadOnlyList<ExchangeRate> rates = await session.Query<ExchangeRate>()
-        //    .Where(r => r.LastUpdated >= DateTimeOffset.UtcNow.AddHours(-24))
-        //    .ToListAsync(cancellationToken);
         IReadOnlyList<ExchangeRate> rates = GenerateTestExchangeRates();
 
         List<ExchangeRateDto> exchangeRates = rates.Adapt<List<ExchangeRateDto>>();
 
-        IEnumerable<string> symbols = rates.Select(r => r.Symbol).Distinct();
+        HashSet<string> symbols = new HashSet<string>(rates.Select(r => r.Symbol));
         List<RateVariationAlert> rateVariations = [];
 
-        foreach (string? symbol in symbols)
+        foreach (string symbol in symbols)
         {
             ExchangeRate? oldestRate = rates
                 .Where(r => r.Symbol == symbol)
-                .OrderBy(r => r.LastUpdated)
-                .FirstOrDefault();
+                .MinBy(r => r.LastUpdated);
 
             ExchangeRate? latestRate = rates
                 .Where(r => r.Symbol == symbol)
-                .OrderByDescending(r => r.LastUpdated)
-                .FirstOrDefault();
+                .MaxBy(r => r.LastUpdated);
 
             if (oldestRate != null && latestRate != null)
             {
                 decimal percentageChange = ((latestRate.Price - oldestRate.Price) / oldestRate.Price) * 100;
 
-                if (Math.Abs(percentageChange) > 5)
+                if (Math.Abs(percentageChange) > VARIATION_THRESHOLD_PERCENT)
                 {
                     rateVariations.Add(new RateVariationAlert(symbol, oldestRate.Price, latestRate.Price, percentageChange));
                 }
@@ -49,11 +46,11 @@ internal class GetRatesQueryHandler
     }
     private List<ExchangeRate> GenerateTestExchangeRates()
     {
-        List<string> symbols = ["MNT", "ICP", "ETC", "TAO", "KAS"];
         List<ExchangeRate> exchangeRates = [];
         Random random = new Random();
-        DateTimeOffset oldestRateTime = DateTimeOffset.UtcNow.AddMinutes(-2);
+        DateTimeOffset oldestRateTime = DateTimeOffset.UtcNow.AddMinutes(2);
         DateTimeOffset latestRateTime = DateTimeOffset.UtcNow;
+        List<string> symbols = ["MNT", "ICP", "ETC", "TAO", "KAS"];
 
         foreach (string symbol in symbols)
         {
