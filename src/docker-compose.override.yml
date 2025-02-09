@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  ratedb:
+    container_name: ratedb
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=RateDb
+    restart: always
+    ports:
+        - "5435:5435"
+    volumes:
+      - postgres_rate:/var/lib/postgresql/data/ 

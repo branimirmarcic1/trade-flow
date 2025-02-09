@@ -1,0 +1,6 @@
+services:
+  ratedb:
+    image: postgres
+
+volumes:
+  postgres_rate:

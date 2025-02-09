@@ -1,10 +1,12 @@
 using BuildingBlocks.Behaviors;
 using BuildingBlocks.Exceptions.Handler;
+using Rate.API.Mapping;
 using Rate.API.Rates;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+MapsterSettings.Configure();
 System.Reflection.Assembly assembly = typeof(Program).Assembly;
 builder.Services.AddMediatR(config =>
 {
