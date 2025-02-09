@@ -1,7 +1,6 @@
-﻿using Carter;
-using Mapster;
-using MediatR;
+﻿using BuildingBlocks.Exceptions;
 using Rate.API.Models;
+using Rate.API.Models.CoinMarketCap;
 
 namespace Rate.API.Rates.GetRates;
 
@@ -11,11 +10,18 @@ public class GetRatesEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/rates", async (ISender sender) =>
+        app.MapGet("/rates", async (ISender sender, ICoinMarketCapApi coinMarketCapApi) =>
         {
-            GetRatesResult result = await sender.Send(new GetRatesQuery());
+            ApiResponse<Rootobject> apiResponse = await coinMarketCapApi.GetLatestListings();
 
-            GetRatesResponse response = result.Adapt<GetRatesResponse>();
+            if (!apiResponse.IsSuccessStatusCode || apiResponse.Content == null)
+            {
+                throw new ApiResponseException("Failed to retrieve data from the CoinMarketCap API.");
+            }
+
+            List<ExchangeRate> exchangeRates = apiResponse.Content.Data.Adapt<List<ExchangeRate>>();
+
+            GetRatesResponse response = new(exchangeRates);
 
             return Results.Ok(response);
         })

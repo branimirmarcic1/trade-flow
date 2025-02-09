@@ -1,5 +1,4 @@
-﻿using BuildingBlocks.CQRS;
-using Rate.API.Models;
+﻿using Rate.API.Models;
 
 namespace Rate.API.Rates.GetRates;
 
