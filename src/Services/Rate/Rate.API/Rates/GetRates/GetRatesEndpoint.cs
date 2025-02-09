@@ -1,10 +1,11 @@
 ﻿using BuildingBlocks.Exceptions;
 using Rate.API.Models;
 using Rate.API.Models.CoinMarketCap;
+using Rate.API.Rates.CreateRate;
 
 namespace Rate.API.Rates.GetRates;
 
-public record GetRatesResponse(IEnumerable<ExchangeRate> ExchangeRates);
+public record GetRatesResponse(IEnumerable<ExchangeRateDto> ExchangeRates);
 
 public class GetRatesEndpoint : ICarterModule
 {
@@ -19,11 +20,12 @@ public class GetRatesEndpoint : ICarterModule
                 throw new ApiResponseException("Failed to retrieve data from the CoinMarketCap API.");
             }
 
-            List<ExchangeRate> exchangeRates = apiResponse.Content.Data.Adapt<List<ExchangeRate>>();
+            List<CreateRateCommand> commands = apiResponse.Content.Data.Adapt<List<CreateRateCommand>>();
 
-            GetRatesResponse response = new(exchangeRates);
+            CreateRatesResult result = await sender.Send(new CreateRatesCommand(commands));
 
-            return Results.Ok(response);
+            List<ExchangeRateDto> exchangeRates = commands.Adapt<List<ExchangeRateDto>>();
+            return Results.Ok(new GetRatesResponse(exchangeRates));
         })
         .WithName("GetRates")
         .Produces<GetRatesResponse>(StatusCodes.Status200OK)

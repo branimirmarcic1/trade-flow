@@ -1,5 +1,6 @@
 using BuildingBlocks.Behaviors;
 using BuildingBlocks.Exceptions.Handler;
+using Marten;
 using Rate.API.Mapping;
 using Rate.API.Rates;
 
@@ -17,6 +18,11 @@ builder.Services.AddMediatR(config =>
 builder.Services.AddValidatorsFromAssembly(assembly);
 
 builder.Services.AddCarter();
+
+builder.Services.AddMarten(opts =>
+{
+    opts.Connection(builder.Configuration.GetConnectionString("Database")!);
+}).UseLightweightSessions();
 
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 

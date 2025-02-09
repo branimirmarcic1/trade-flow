@@ -1,5 +1,3 @@
-version: '3.4'
-
 services:
   ratedb:
     container_name: ratedb
@@ -9,6 +7,18 @@ services:
       - POSTGRES_DB=RateDb
     restart: always
     ports:
-        - "5435:5435"
+        - "5432:5432"
     volumes:
       - postgres_rate:/var/lib/postgresql/data/ 
+      
+  # rate.api:
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #     - ASPNETCORE_HTTP_PORTS=8080
+  #     - ASPNETCORE_HTTPS_PORTS=8081
+  #   ports:
+  #     - "8080"
+  #     - "8081"
+  #   volumes:
+  #     - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+  #     - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro

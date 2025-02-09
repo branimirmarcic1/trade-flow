@@ -4,7 +4,7 @@
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
     <DockerPublishLocally>False</DockerPublishLocally>
-    <ProjectGuid>b5e07fe4-5d4a-4b85-bca8-d80a3d825230</ProjectGuid>
+    <ProjectGuid>6a7800da-4ddb-40e7-af3a-d53cd443de34</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
     <DockerServiceName>rate.api</DockerServiceName>
