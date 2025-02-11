@@ -8,7 +8,7 @@ public class CreatePositionHandler(IApplicationDbContext dbContext)
 {
     public async Task<CreatePositionResult> Handle(CreatePositionCommand command, CancellationToken cancellationToken)
     {
-        PositionModel position = command.Position.Adapt<PositionModel>();
+        PositionModel position = command.Adapt<PositionModel>();
 
         dbContext.Positions.Add(position);
         await dbContext.SaveChangesAsync(cancellationToken);

@@ -1,10 +1,14 @@
 ﻿using FluentValidation;
-using Position.Application.Dtos;
 
 namespace Position.Application.Positions.Commands.CreatePosition;
 
-public record CreatePositionCommand(PositionDto Position)
-    : ICommand<CreatePositionResult>;
+public record CreatePositionCommand(
+    string InstrumentId,
+    decimal Quantity,
+    decimal InitialRate,
+    decimal CurrentRate,
+    int Side
+) : ICommand<CreatePositionResult>;
 
 public record CreatePositionResult(Guid Id);
 
@@ -12,17 +16,17 @@ public class CreatePositionCommandValidator : AbstractValidator<CreatePositionCo
 {
     public CreatePositionCommandValidator()
     {
-        RuleFor(x => x.Position.InstrumentId)
+        RuleFor(x => x.InstrumentId)
             .NotEmpty().WithMessage("InstrumentId is required")
             .MaximumLength(10).WithMessage("InstrumentId cannot be longer than 10 characters");
 
-        RuleFor(x => x.Position.Quantity)
+        RuleFor(x => x.Quantity)
             .GreaterThan(0).WithMessage("Quantity must be greater than zero");
 
-        RuleFor(x => x.Position.InitialRate)
+        RuleFor(x => x.InitialRate)
             .GreaterThan(0).WithMessage("InitialRate must be greater than zero");
 
-        RuleFor(x => x.Position.Side)
+        RuleFor(x => x.Side)
             .Must(side => side == 1 || side == -1)
             .WithMessage("Side must be 1 (BUY) or -1 (SELL)");
     }
