@@ -40,6 +40,7 @@ builder.Services
         c.BaseAddress = new Uri("https://pro-api.coinmarketcap.com");
         c.DefaultRequestHeaders.Add("X-CMC_PRO_API_KEY", "549679b3-91d1-44aa-940a-9b0e5ed21e33");
     });
+builder.Services.AddSingleton<KafkaProducerService>();
 
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<IKafkaProducer, KafkaProducer>();

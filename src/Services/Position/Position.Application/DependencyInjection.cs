@@ -1,6 +1,7 @@
 ﻿using BuildingBlocks.Behaviors;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Position.Application.Kafka;
 using Position.Application.Mapping;
 using System.Reflection;
 
@@ -17,7 +18,7 @@ public static class DependencyInjection
             config.AddOpenBehavior(typeof(ValidationBehavior<,>));
             config.AddOpenBehavior(typeof(LoggingBehavior<,>));
         });
-
+        services.AddHostedService<KafkaConsumerService>();
         return services;
     }
 }
