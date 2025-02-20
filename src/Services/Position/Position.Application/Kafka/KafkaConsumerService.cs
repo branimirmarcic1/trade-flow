@@ -27,23 +27,22 @@ public class KafkaConsumerService : BackgroundService
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
         return Task.Run(() =>
-    {
-        _consumer.Subscribe(_topic);
-        while (!stoppingToken.IsCancellationRequested)
         {
+            while (!stoppingToken.IsCancellationRequested)
+            {
                 try
                 {
                     ConsumeResult<Ignore, string> consumeResult = _consumer.Consume(stoppingToken);
                     _logger.LogInformation($"[Kafka] Received message: {consumeResult.Message.Value}");
 
                     // Ovdje možeš dodati logiku – npr. deserializirati poruku i kreirati novu poziciju
-        }
+                }
                 catch (OperationCanceledException)
                 {
                     break;
-    }
+                }
                 catch (ConsumeException ex)
-    {
+                {
                     _logger.LogError($"[Kafka] Error: {ex.Error.Reason}");
                 }
             }
