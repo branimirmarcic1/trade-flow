@@ -5,6 +5,7 @@ using Hangfire.MemoryStorage;
 using Marten;
 using Rate.API.Hubs;
 using Rate.API.Jobs;
+using Rate.API.Kafka;
 using Rate.API.Mapping;
 using Rate.API.Rates;
 
@@ -39,13 +40,13 @@ builder.Services
         c.BaseAddress = new Uri("https://pro-api.coinmarketcap.com");
         c.DefaultRequestHeaders.Add("X-CMC_PRO_API_KEY", "549679b3-91d1-44aa-940a-9b0e5ed21e33");
     });
+builder.Services.AddSingleton<KafkaProducerService>();
 
 builder.Services.AddSignalR();
 
 builder.Services.AddHangfire(config => config.UseMemoryStorage());
 builder.Services.AddHangfireServer();
 
-// === DODANO: CORS konfiguracija ===
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins", builder =>

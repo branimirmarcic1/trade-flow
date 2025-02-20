@@ -1,4 +1,5 @@
 ﻿using Marten;
+using Rate.API.Kafka;
 using Rate.API.Models;
 
 namespace Rate.API.Rates.CreateRate;
@@ -17,7 +18,7 @@ public record CreateRatesCommand(IEnumerable<CreateRateCommand> Rates) : IReques
 public record CreateRatesResult(IEnumerable<int> Ids);
 
 internal class CreateRatesCommandHandler
-    (IDocumentSession session)
+    (IDocumentSession session, KafkaProducerService kafkaProducerService)
     : IRequestHandler<CreateRatesCommand, CreateRatesResult>
 {
     public async Task<CreateRatesResult> Handle(CreateRatesCommand command, CancellationToken cancellationToken)
@@ -26,6 +27,8 @@ internal class CreateRatesCommandHandler
 
         try
         {
+            await kafkaProducerService.SendMessageAsync("Rate created");
+
             session.Store(rates.ToArray());
             await session.SaveChangesAsync(cancellationToken);
             return new CreateRatesResult(rates.Select(r => r.Id));
