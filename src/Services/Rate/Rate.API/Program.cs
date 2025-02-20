@@ -1,14 +1,17 @@
 using BuildingBlocks.Behaviors;
 using BuildingBlocks.Exceptions.Handler;
-using HealthChecks.UI.Client;
+using Hangfire;
+using Hangfire.MemoryStorage;
 using Marten;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Rate.API.Hubs;
+using Rate.API.Jobs;
 using Rate.API.Mapping;
 using Rate.API.Rates;
 
+// Existing builder configuration...
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Register your services
 MapsterSettings.Configure();
 System.Reflection.Assembly assembly = typeof(Program).Assembly;
 builder.Services.AddMediatR(config =>
@@ -36,17 +39,47 @@ builder.Services
         c.BaseAddress = new Uri("https://pro-api.coinmarketcap.com");
         c.DefaultRequestHeaders.Add("X-CMC_PRO_API_KEY", "549679b3-91d1-44aa-940a-9b0e5ed21e33");
     });
+
+builder.Services.AddSignalR();
+
+builder.Services.AddHangfire(config => config.UseMemoryStorage());
+builder.Services.AddHangfireServer();
+
+// === DODANO: CORS konfiguracija ===
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+// ===================================
+
 WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
+
+// === DODANO: CORS Middleware ===
+app.UseCors("AllowAllOrigins");
+// ================================
+
+app.UseHangfireDashboard();
+
 app.MapCarter();
 
-app.UseExceptionHandler(options => { });
+app.MapHub<RateHub>("/ratehub");
 
-app.UseHealthChecks("/health",
-    new HealthCheckOptions
-    {
-        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-    });
+RecurringJob.AddOrUpdate<RatesJob>(
+    "RatesJob",
+    job => job.ExecuteAsync(CancellationToken.None),
+    Cron.Minutely);
+
+app.UseExceptionHandler(options => { });
+//app.UseHealthChecks("/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+//{
+//    ResponseWriter = HealthChecks.UI.Client.UIResponseWriter.WriteHealthCheckUIResponse
+//});
 
 app.Run();

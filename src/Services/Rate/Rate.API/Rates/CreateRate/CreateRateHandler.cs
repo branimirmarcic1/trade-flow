@@ -24,9 +24,17 @@ internal class CreateRatesCommandHandler
     {
         List<ExchangeRate> rates = command.Rates.Adapt<List<ExchangeRate>>();
 
-        session.Store(rates.ToArray());
-        await session.SaveChangesAsync(cancellationToken);
+        try
+        {
+            session.Store(rates.ToArray());
+            await session.SaveChangesAsync(cancellationToken);
+            return new CreateRatesResult(rates.Select(r => r.Id));
+        }
+        catch (Exception ex)
+        {
 
-        return new CreateRatesResult(rates.Select(r => r.Id));
+            throw new Exception(ex.Message);
+        }
+
     }
 }

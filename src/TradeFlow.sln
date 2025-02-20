@@ -25,6 +25,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Position.Application", "Ser
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Position.Infrastructure", "Services\Position\Position.Infrastructure\Position.Infrastructure.csproj", "{CE3109BD-4E02-4BE8-B07B-9B26BE5C2166}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Blazor", "Blazor", "{AE0056AE-98CF-4018-BDA3-A91439B81D4A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProofofConcept", "Services\ProofofConcept\ProofofConcept\ProofofConcept.csproj", "{08E75BB2-2102-4021-9EFC-F5C258CFC95B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +63,10 @@ Global
 		{CE3109BD-4E02-4BE8-B07B-9B26BE5C2166}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE3109BD-4E02-4BE8-B07B-9B26BE5C2166}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE3109BD-4E02-4BE8-B07B-9B26BE5C2166}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08E75BB2-2102-4021-9EFC-F5C258CFC95B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08E75BB2-2102-4021-9EFC-F5C258CFC95B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08E75BB2-2102-4021-9EFC-F5C258CFC95B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08E75BB2-2102-4021-9EFC-F5C258CFC95B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -72,5 +80,7 @@ Global
 		{5555070C-2A5A-4027-BC92-D733BA462869} = {97E3FF31-A389-450C-9E89-8C2FBFFBEBF9}
 		{06C21AC5-1D51-43E5-9342-77A09DE76C28} = {97E3FF31-A389-450C-9E89-8C2FBFFBEBF9}
 		{CE3109BD-4E02-4BE8-B07B-9B26BE5C2166} = {97E3FF31-A389-450C-9E89-8C2FBFFBEBF9}
+		{AE0056AE-98CF-4018-BDA3-A91439B81D4A} = {FA4C529F-573D-44DE-98B5-528FCF174D99}
+		{08E75BB2-2102-4021-9EFC-F5C258CFC95B} = {AE0056AE-98CF-4018-BDA3-A91439B81D4A}
 	EndGlobalSection
 EndGlobal

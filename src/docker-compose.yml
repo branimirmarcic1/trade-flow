@@ -4,11 +4,11 @@ services:
 
   positiondb:
     image: mcr.microsoft.com/mssql/server
-  # rate.api:
-  #   image: ${DOCKER_REGISTRY-}rateapi
-  #   build:
-  #     context: .
-  #     dockerfile: Services/Rate/Rate.API/Dockerfile
+  rate.api:
+    image: ${DOCKER_REGISTRY-}rateapi
+    build:
+      context: .
+      dockerfile: Services/Rate/Rate.API/Dockerfile
 
 volumes:
   postgres_rate:

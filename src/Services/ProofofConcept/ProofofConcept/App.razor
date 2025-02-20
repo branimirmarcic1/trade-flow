@@ -1,0 +1,56 @@
+﻿@using Microsoft.AspNetCore.SignalR.Client
+@inject HubConnection HubConnection
+
+<h1>Hello, world!</h1>
+
+<h3>Rate Updates</h3>
+
+@if (rateUpdates.Any())
+{
+    <ul>
+        @foreach (var update in rateUpdates)
+        {
+            <li>@update</li>
+        }
+    </ul>
+}
+else
+{
+    <p>No rate updates received yet.</p>
+}
+
+<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+    </Found>
+    <NotFound>
+        <p>Sorry, there's nothing at this address.</p>
+    </NotFound>
+</Router>
+
+@code {
+    private List<string> rateUpdates = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        HubConnection.On<string, decimal>("RateUpdated", (currency, price) =>
+        {
+            var updateMessage = $"{currency}: {price}";
+            rateUpdates.Add(updateMessage);
+            InvokeAsync(StateHasChanged); // Osvježi UI
+        });
+
+        if (HubConnection.State == HubConnectionState.Disconnected)
+        {
+            try
+            {
+                await HubConnection.StartAsync();
+                Console.WriteLine("Connected to SignalR Hub!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to connect: {ex.Message}");
+            }
+        }
+    }
+}
