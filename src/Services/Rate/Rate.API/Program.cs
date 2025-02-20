@@ -5,6 +5,7 @@ using Hangfire.MemoryStorage;
 using Marten;
 using Rate.API.Hubs;
 using Rate.API.Jobs;
+using Rate.API.Kafka;
 using Rate.API.Mapping;
 using Rate.API.Rates;
 
@@ -41,11 +42,10 @@ builder.Services
     });
 
 builder.Services.AddSignalR();
-
+builder.Services.AddSingleton<IKafkaProducer, KafkaProducer>();
 builder.Services.AddHangfire(config => config.UseMemoryStorage());
 builder.Services.AddHangfireServer();
 
-// === DODANO: CORS konfiguracija ===
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins", builder =>
@@ -61,9 +61,7 @@ WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
-// === DODANO: CORS Middleware ===
 app.UseCors("AllowAllOrigins");
-// ================================
 
 app.UseHangfireDashboard();
 

@@ -1,14 +1,99 @@
+version: '3.8'
 services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      # Dva listenera na različitim portovima
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+
+  kafkamanager:
+    image: hlebalbau/kafka-manager:latest
+    container_name: kafkamanager
+    depends_on:
+      - zookeeper
+      - kafka
+    environment:
+      # OVDJE KAŽEMO CMAK-u GDJE JE ZOOKEEPER
+      ZK_HOSTS: "zookeeper:2181"
+    ports:
+      - "9000:9000"
+
+  # Primjeri baza
   ratedb:
     image: postgres
+    container_name: ratedb
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=RateDb
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_rate:/var/lib/postgresql/data/
 
   positiondb:
+    container_name: positiondb
     image: mcr.microsoft.com/mssql/server
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=SwN12345678
+    restart: always
+    ports:
+      - "1433:1433"
+
+  # Primjeri ASP.NET servisa
   rate.api:
-    image: ${DOCKER_REGISTRY-}rateapi
+    image: rateapi
+    container_name: rateapi
     build:
       context: .
       dockerfile: Services/Rate/Rate.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - Kafka__BootstrapServers=kafka:9092
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  position.api:
+    image: positionapi
+    container_name: positionapi
+    build:
+      context: .
+      dockerfile: Services/Position/Position.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Kafka__BootstrapServers=kafka:9092
+      - Kafka__GroupId=position-consumer-group
+    ports:
+      - "8082:80"
 
 volumes:
   postgres_rate:

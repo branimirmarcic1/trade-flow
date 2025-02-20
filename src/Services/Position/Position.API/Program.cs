@@ -1,7 +1,6 @@
 using Position.API;
 using Position.Application;
 using Position.Infrastructure;
-using Position.Infrastructure.Data.Extensions;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +17,7 @@ app.UseApiServices();
 
 if (app.Environment.IsDevelopment())
 {
-    await app.InitialiseDatabaseAsync();
+    //await app.InitialiseDatabaseAsync();
 }
 
 app.Run();
