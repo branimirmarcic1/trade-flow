@@ -19,6 +19,8 @@ public static class DependencyInjection
             config.AddOpenBehavior(typeof(LoggingBehavior<,>));
         });
         services.AddHostedService<KafkaConsumerService>();
+
+        services.AddSignalR();
         return services;
     }
 }

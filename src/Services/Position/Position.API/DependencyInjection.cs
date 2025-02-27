@@ -1,7 +1,7 @@
 ﻿using BuildingBlocks.Exceptions.Handler;
-using Carter;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Position.Application.Hubs;
 
 namespace Position.API;
 
@@ -20,6 +20,7 @@ public static class DependencyInjection
 
     public static WebApplication UseApiServices(this WebApplication app)
     {
+        app.MapHub<PositionHub>("/positionhub");
         app.MapCarter();
 
         app.UseExceptionHandler(options => { });

@@ -92,8 +92,25 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - Kafka__BootstrapServers=kafka:9092
       - Kafka__GroupId=position-consumer-group
+      - ASPNETCORE_URLS=http://+:80
     ports:
       - "8082:80"
+  blazorapp:
+    image: blazorapp
+    container_name: blazorapp
+    build:
+      context: .
+      dockerfile: Services/ProofofConcept/ProofofConcept/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8083
+    ports:
+      - "8083:8083"
+    depends_on:
+      - rate.api
+      - position.api
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 volumes:
   postgres_rate:
