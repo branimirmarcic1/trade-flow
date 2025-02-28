@@ -103,6 +103,7 @@ services:
       dockerfile: Services/ProofofConcept/ProofofConcept/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
       - ASPNETCORE_URLS=http://+:8083
     ports:
       - "8083:8083"
